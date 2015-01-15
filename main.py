@@ -1,4 +1,3 @@
-#!/usr/bin/env python
 #
 # Copyright 2007 Google Inc.
 #
@@ -40,10 +39,16 @@ class MainHandler(webapp2.RequestHandler):
 		  start_date='2014-12-01',
 		  end_date='2014-12-07').execute(http)
 
-		self.response.write(report)
+		cleanedData = []
+		for row in report['rows']:
+			rowDictionary = {"day":int(row[1])+1, "hour":int(row[0]) + 1, "value":int(row[2])}
+			cleanedData.append(rowDictionary)
+
+		self.response.write(cleanedData)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
     (decorator.callback_path, decorator.callback_handler())
 ], debug=True)
+
 
