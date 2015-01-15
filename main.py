@@ -16,10 +16,24 @@
 #
 import webapp2
 
+import os
+from apiclient.discovery import build
+from google.appengine.ext import webapp
+from oauth2client.appengine import OAuth2DecoratorFromClientSecrets
+
+decorator = OAuth2DecoratorFromClientSecrets(
+  os.path.join(os.path.dirname(__file__), 'client_secret.json'),
+  'https://www.googleapis.com/auth/analytics.readonly')
+
+service = build('calendar', 'v3')
+
 class MainHandler(webapp2.RequestHandler):
-    def get(self):
-        self.response.write('Hello world!')
+	@decorator.oauth_required
+	def get(self):
+		self.response.write('Hello world!')
 
 app = webapp2.WSGIApplication([
-    ('/', MainHandler)
+    ('/', MainHandler),
+    (decorator.callback_path, decorator.callback_handler())
 ], debug=True)
+
