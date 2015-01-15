@@ -20,6 +20,7 @@ import os
 from apiclient.discovery import build
 from google.appengine.ext import webapp
 from oauth2client.appengine import OAuth2DecoratorFromClientSecrets
+import httplib2
 
 decorator = OAuth2DecoratorFromClientSecrets(
   os.path.join(os.path.dirname(__file__), 'client_secret.json'),
@@ -30,7 +31,16 @@ service = build('analytics', 'v3')
 class MainHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
 	def get(self):
-		self.response.write('Hello world!')
+		http = decorator.http()
+
+		report = service.data().ga().get(
+		  ids='ga:%s'%self.request.get("viewId"),
+		  metrics='ga:sessions',
+		  dimensions='ga:hour,ga:dayOfWeek',
+		  start_date='2014-12-01',
+		  end_date='2014-12-07').execute(http)
+
+		self.response.write(report)
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
