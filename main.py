@@ -25,7 +25,7 @@ decorator = OAuth2DecoratorFromClientSecrets(
   os.path.join(os.path.dirname(__file__), 'client_secret.json'),
   'https://www.googleapis.com/auth/analytics.readonly')
 
-service = build('calendar', 'v3')
+service = build('analytics', 'v3')
 
 class MainHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
