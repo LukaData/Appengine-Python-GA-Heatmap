@@ -27,6 +27,10 @@ decorator = OAuth2DecoratorFromClientSecrets(
 
 service = build('analytics', 'v3')
 
+import jinja2
+JINJA_ENVIRONMENT = jinja2.Environment(loader=jinja2.FileSystemLoader(os.path.dirname(__file__)), autoescape=True, extensions=['jinja2.ext.autoescape'])
+
+
 class MainHandler(webapp2.RequestHandler):
 	@decorator.oauth_required
 	def get(self):
@@ -44,7 +48,8 @@ class MainHandler(webapp2.RequestHandler):
 			rowDictionary = {"day":int(row[1])+1, "hour":int(row[0]) + 1, "value":int(row[2])}
 			cleanedData.append(rowDictionary)
 
-		self.response.write(cleanedData)
+		template = JINJA_ENVIRONMENT.get_template('index.html')
+		self.response.write(template.render({'cleanedData':cleanedData}))
 
 app = webapp2.WSGIApplication([
     ('/', MainHandler),
