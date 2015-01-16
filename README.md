@@ -9,3 +9,4 @@ This AppEngine (Python) application connects with Google Analytics and creates a
 
 ### More
 For a detailed, step by step tutorial visit blogpost at [Analytics Pros](http://www.analyticspros.com).
+![Heatmap](http://www.analyticspros.com/wp-content/uploads/12.png) 
